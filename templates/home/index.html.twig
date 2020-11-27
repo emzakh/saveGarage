@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block title %}Homepage
+{% endblock %}
+{% block body %}
+
+
+
+	<div class="container">
+		<div class="jumbotron mt-3">
+			<h1 class="display-3">Bienvenue sur Garage</h1>
+			<p class="lead">Nous mettons en relation des futurs locataire et les propriétaires qui veulent profiter d'opportunités et gagner de l'argent en proposant leur bien à la location pour des vacances</p>
+			<hr class="my-4">
+			<p>Vous êtes voyageur? Et vous voulez voir où vous pourrez loger pour votre prochain déplacement?
+			</p>
+			<p class="lead">
+				<a class="btn btn-primary btn-lg" href="{{ path('catalogue')}}" role="button">Voir nos annonces</a>
+			</p>
+		</div>
+
+		<h1 class='mt-3 mb-4'>Nos vroums vroums
+		</h1>
+
+		<div class="row">
+			{% for car in voitures %}
+
+            {% set url = path('fichevroom',{'slug':car.slug }) %}
+         
+
+				<div class="col-md-4 mb-2 ">
+					<div class="card border-warning" style="height: 450px">
+						<div class="card-header">{{ car.marque }}
+							<strong class="text-warning">{{ car.modele }}</strong>
+						</div>
+						<img src="{{ car.imgCover }}" class="img-fluid" alt="{{ car.modele }}">
+						<div class="card-body">
+							<h4 class="card-title">{{ car.modele }}</h4>
+							<p class="card-text">{{ car.description }}</p>
+							<a href="{{ url }}" class="btn btn-danger col-6">Voir plus ...</a>
+						</div>
+					</div>
+				</div>
+	
+		{% endfor %}
+
+
+	</div>
+	</div>
+{% endblock %}
