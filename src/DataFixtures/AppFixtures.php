@@ -4,19 +4,53 @@ namespace App\DataFixtures;
 
 use Faker\Factory;
 use App\Entity\Image;
+use App\Entity\User;
 use App\Entity\Voiture;
 use Cocur\Slugify\Slugify;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
+        // gestion du hash de password
+        private $encoder;
+
+        public function __construct(UserPasswordEncoderInterface $encoder)
+        {
+            $this->encoder = $encoder;
+        }
+
     public function load(ObjectManager $manager)
     {
+        $faker = Factory::create('FR-fr');
+        // gestion des utilisateurs 
+        $users = []; // initialisation d'un tableau pour associer Ad et User
+        $genres = ['male','femelle'];
 
+        for($u=1; $u <= 10; $u++){
+            $user = new User();
+            $genre = $faker->randomElement($genres);
+
+            $picture = 'https://randomuser.me/api/portraits/';
+            $pictureId = $faker->numberBetween(1,99).'.jpg';
+            $picture .= ($genre == 'male' ? 'men/' : 'women/').$pictureId;
+
+            $hash = $this->encoder->encodePassword($user,'password');
+
+            $user->setFirstName($faker->firstName($genre))
+                ->setLastName($faker->lastName())
+                ->setEmail($faker->email())
+                ->setIntroduction($faker->sentence())
+                ->setDescription('<p>'.join('</p><p>', $faker->paragraphs(3)).'</p>')
+                ->setPassword($hash)
+                ->setPicture($picture);
+
+            $manager->persist($user);
+            $users[]= $user; // ajouter l'utilisateur fraichement créé dans le tableau pour l'association avec les annonces    
+
+    }
         for ($u = 1; $u <= 12; $u++) {
-
-            $faker = Factory::create('FR-fr');
             $voiture = new Voiture();
             $slugify = new Slugify();
             $marque = $faker->lexify('constructor ???');
@@ -27,7 +61,7 @@ class AppFixtures extends Fixture
             $carburant = ['essence', 'diesel'];
             $transmission = ['automatique', 'manuel'];
             $slug = $slugify->slugify($marque . '-' . $modele . '-' . rand(1, 100000));
-
+            $user = $users[rand(0,count($users)-1)];
 
 
             $voiture->setMarque($marque)
@@ -43,7 +77,8 @@ class AppFixtures extends Fixture
                 ->setTransmission($faker->randomElement($transmission))
                 ->setDescription($description)
                 ->setSupOption($supOption)
-                ->setSlug($slug);
+                ->setSlug($slug)
+                ->setAuthor($user);
 
 
             $manager->persist($voiture);

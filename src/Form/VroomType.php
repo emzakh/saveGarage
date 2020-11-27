@@ -4,29 +4,20 @@ namespace App\Form;
 
 use App\Entity\Voiture;
 use App\Form\ImageType;
-use Symfony\Component\Form\AbstractType;
+use App\Form\ApplicationType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
-class VroomType extends AbstractType
+class VroomType extends ApplicationType
 {
-    private function getConfiguration($label,$placeholder, $options=[]){
-        return array_merge([
-            'label'=>$label,
-            'attr'=> [
-                'placeholder'=>$placeholder
-            ]
-     
-            ], $options);
-    }
-
+ 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

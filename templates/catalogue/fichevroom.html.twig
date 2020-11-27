@@ -49,9 +49,9 @@
 					</p>
 				</div>
 				<div style="height:100px;" class="mb-2 border border-dark">
-					<p class="flex-column d-flex justify-content-center align-items-center h1">
-						<span class="text-primary h2">Transmission:</span>
-						{{ showVoiture.transmission}}
+					<p class="flex-column d-flex justify-content-center align-items-center h4">
+						<span class="text-primary ">Auteur de l'annonce:</span>
+						{{ showVoiture.author.slug}}
 					</p>
 				</div>
 
@@ -97,12 +97,8 @@
 					<span class="text-primary h4">Cylindrée :</span>
 					<span class="textTwig"> {{ showVoiture.cylindre }}CC </span>                    
                     </p>
-				<hr class="bg-dark">
-				<p>
-					<span class="text-primary h4">Mise en circulation :</span>				
-                    <span class="textTwig"> {{ showVoiture.dateCircu | date('d/m/Y') }} </span>	                    
-                </p>
-				<hr class="bg-dark">
+				<hr class="bg-dark">			
+			
 				<p>
 					<span class="text-primary h4">Transmission :</span>
                     <span class="textTwig"> {{ showVoiture.transmission }} </span>

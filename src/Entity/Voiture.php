@@ -108,6 +108,12 @@ class Voiture
 
 
       /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="showVoiture")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $author;
+
+      /**
      * Permet d'initialiser le slug automatiquement s'il n'est pas fourni 
      * @ORM\PrePersist
      * @ORM\PreUpdate
@@ -330,4 +336,18 @@ class Voiture
 
         return $this;
     }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+
 }
