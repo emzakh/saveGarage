@@ -63,6 +63,8 @@ class ShowCarController extends AbstractController
                 $image->setVoiture($voiture);
                 $manager->persist($image);
             }
+            
+            $voiture->setAuthor($this->getUser());
             // on ajoute l'auteur mais attention maintenant il y a un risque de bug si on n'est pas connecté (à corriger)
             // $ad->setAuthor($this->getUser());
 

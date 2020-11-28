@@ -4,16 +4,20 @@ namespace App\Entity;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
+use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity(
+ *  fields={"email"},
+ *  message="Un autre utilisateur possède déjà cette email, merci de la modifier"
+ * )
  */
 class User implements UserInterface
 {
@@ -42,8 +46,8 @@ class User implements UserInterface
     private $password;
 
     /**
-    * @Assert\EqualTo(propertyPath="password", message="Vous n'avez pas correctement confirmé votre mot de passe")
-    */
+     * @Assert\EqualTo(propertyPath="password", message="Vous n'avez pas correctement confirmé votre mot de passe")
+     */
     public $passwordConfirm;
 
     /**
@@ -54,13 +58,14 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="Vous devez entrer votre nom")
+     * @Assert\NotBlank(message="Vous devez renseinger votre nom")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Url(message="Veuillez donner une URL valide pour votre avatar")
+     * @Assert\Image(mimeTypes={"image/png", "image/jpeg", "image/jpg", "image/gif"}, mimeTypesMessage="Vous devez upload un fichier jpg, png ou gif")
+     * @Assert\File(maxSize="1024k", maxSizeMessage="Taille du fichier trop grande")
      */
     private $picture;
 
@@ -81,16 +86,16 @@ class User implements UserInterface
      */
     private $slug;
 
-     /**
+    /**
      * @ORM\OneToMany(targetEntity=Voiture::class, mappedBy="author")
      */
     private $voitures;
 
     /**
-     * Permet d'initialiser le slug automatiquement s'il n'est pas fourni 
+     * Permet d'initialiser le slug automatiquement s'il n'est pas fourni
      * @ORM\PrePersist
      * @ORM\PreUpdate
-     * 
+     *
      * @return void
      */
     public function initializeSlug(){
@@ -99,16 +104,17 @@ class User implements UserInterface
             $this->slug = $slugify->slugify($this->firstName.' '.$this->lastName.' '.rand());
         }
     }
+
     public function __construct()
     {
-        $this->voitures = new ArrayCollection();
+        $this->voitures=new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
         return $this->id;
     }
+
 
     public function getEmail(): ?string
     {
@@ -255,7 +261,8 @@ class User implements UserInterface
         return $this;
     }
 
-     /**
+
+    /**
      * @return Collection|Voiture[]
      */
     public function getVoitures(): Collection
@@ -273,7 +280,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function removeVoiture(Voiture $voiture): self
+    public function removeAd(Voiture $voiture): self
     {
         if ($this->voitures->removeElement($voiture)) {
             // set the owning side to null (unless already changed)

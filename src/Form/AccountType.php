@@ -18,8 +18,7 @@ class AccountType extends ApplicationType
         $builder
             ->add('firstName', TextType::class, $this->getConfiguration("Prénom","Votre prénom..."))
             ->add('lastName', TextType::class, $this->getConfiguration("Nom","Votre nom de famille..."))
-            ->add('email', EmailType::class, $this->getConfiguration("Email","Votre adresse email..."))
-            ->add('picture', UrlType::class, $this->getConfiguration("Photo de profil","URL de votre avatar..."))
+            ->add('email', EmailType::class, $this->getConfiguration("Email","Votre adresse email..."))            
             ->add('introduction', TextType::class, $this->getConfiguration("Introduction","Présentation rapide"))
             ->add('description', TextareaType::class, $this->getConfiguration("Description détaillée","Présentez vous avec un plus de détails"))
         ;
