@@ -75,7 +75,7 @@ class AppFixtures extends Fixture
 
             $voiture->setMarque($marque)
                 ->setModele($modele)
-                ->setImgCover('https://placekitten.com/1000/350')
+                ->setImgCover('michou-5fc259f8b865e.jpeg')
                 ->setKm(rand(100, 250000))
                 ->setPrix(rand(400, 50000))
                 ->setNbProprio(rand(1, 5))

@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -23,7 +24,7 @@ class VroomType extends ApplicationType
         $builder
             ->add('marque',TextType::class,$this->getConfiguration('marque','Marque de votre voiture'))
             ->add('modele',TextType::class,$this->getConfiguration('modele','Modèle de votre voiture'))
-            ->add('img_cover',UrlType::class,$this->getConfiguration('url de l\'image','Veuillez entrer l\'adresse de votre image'))
+            ->add('img_cover',FileType::class,$this->getConfiguration('Image de couverture','Veuillez entrer l\'adresse de votre image'))
             ->add('km',IntegerType::class,$this->getConfiguration('Nombre de km','km au compteur'))
             ->add('prix',MoneyType::class, $this->getConfiguration('Prix de votre voiture','Indiquez le prix demandé'))
             ->add('nbProprio',IntegerType::class,$this->getConfiguration('Nombre de proprietaire','Indiquez le nombre de propriétaire'))
@@ -35,8 +36,10 @@ class VroomType extends ApplicationType
             ->add('description',TextareaType::class, $this->getConfiguration('Description','Description détaillée de votre voiture'))
             ->add('supOption',TextareaType::class,$this->getConfiguration('Option de votre voiture','Options supplémentaires du véhicule'))
             ->add('slug',TextType::class, $this->getConfiguration('Slug','Adresse web (automatique)',[
-                'required'=>false
+                'required'=>false,
+                'disabled'=>true,                
             ]))
+            
             ->add(
                 'images',
                 CollectionType::class,

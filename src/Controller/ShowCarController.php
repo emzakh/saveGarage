@@ -12,7 +12,9 @@ use App\Form\VroomType;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Form\FormError;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class ShowCarController extends AbstractController
 {
@@ -34,25 +36,14 @@ class ShowCarController extends AbstractController
     /**
      * Permet d'ajouter une voiture
      * @Route("/catalogue/new", name="new_voiture")
-     * @IsGranted("ROLE_USER")
-     * 
+     * @IsGranted("ROLE_USER")     * 
      *
      * @return Response
      */
 
     public function create(EntityManagerInterface $manager, Request $request)
     {
-        $voiture = new Voiture();
-
-        $image1 = new Image();
-        $image1->setUrl('http://placehold.it/400x200')
-            ->setCaption('Titre 1');
-        $voiture->addImage($image1);
-
-        $image2 = new Image();
-        $image2->setUrl('http://placehold.it/400x200')
-            ->setCaption('Titre 2');
-        $voiture->addImage($image2);
+        $voiture = new Voiture(); 
 
         $form = $this->createForm(VroomType::class, $voiture);
 
@@ -61,6 +52,27 @@ class ShowCarController extends AbstractController
         // dump($voiture);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+
+            $file = $form['img_cover']->getData();
+            if(!empty($file)){
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+                try{
+                    $file->move(
+                        $this->getParameter('uploads_directory'),
+                        $newFilename
+                    );
+                }
+                catch(FileException $e)
+                {
+                    return $e->getMessage();
+                }
+
+                $voiture->setImgCover($newFilename);
+            }
+
 
             foreach ($voiture->getImages() as $image) {
                 $image->setVoiture($voiture);
