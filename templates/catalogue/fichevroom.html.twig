@@ -8,6 +8,7 @@
 
 	<div class="container">
 		<div class="row">
+		
 			<div id="carouselExampleCaptions" class="mt-2 mb-2 ml-0 mr-0 col-9 carousel slide" data-ride="carousel">
 				<ol class="carousel-indicators">
 					{% for image in showVoiture.images %}
@@ -50,8 +51,15 @@
 				</div>
 				<div style="height:100px;" class="mb-2 border border-dark">
 					<p class="flex-column d-flex justify-content-center align-items-center h4">
-						<span class="text-primary ">Auteur de l'annonce:</span>
-						{{ showVoiture.author.slug}}
+						<span class="text-primary "></span>
+						{% set a = showVoiture.author %}
+					<p><span class="text-warning">
+                            {% if a.picture %}
+                                <img src="/uploads/{{a.picture}}" class="avatar avatar-medium mr-1 ml-1" alt="" style="height:100px;width: 100px;object-fit: contain;">
+                            {% else %}
+                                <img src="http://placehold.it/300x300" class="avatar avatar-medium mr-2" alt=""  style="height:100px;width: 100px;object-fit: contain;">
+                            {% endif %}
+                        </span>{{ a.slug }} </p>
 					</p>
 				</div>
 
@@ -110,7 +118,7 @@
 				<p>
 					<span class="text-primary h4">Description :</span>
 				</p>
-				<p class="textTwig">{{ showVoiture.description }}</p>
+				<p class="textTwig">{{ showVoiture.description | raw | nl2br }}</p>
 				<hr class="bg-dark">
 				<p>
 					<span class="text-primary h4">Options :</span>

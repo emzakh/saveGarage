@@ -14,22 +14,7 @@
 		<div class="row">
 			{% for car in voitures %}
 
-            {% set url = path('fichevroom',{'slug':car.slug }) %}
-         
-
-				<div class="col-md-4 mb-2 ">
-					<div class="card border-warning" style="height: 450px">
-						<div class="card-header">{{ car.marque }}
-							<strong class="text-warning">{{ car.modele }}</strong>
-						</div>
-						<img src="{{ car.imgCover }}" class="img-fluid" alt="{{ car.modele }}">
-						<div class="card-body">
-							<h4 class="card-title">{{ car.modele }}</h4>
-							<p class="card-text">{{ car.description }}</p>
-							<a href="{{ url }}" class="btn btn-danger col-6">Voir plus ...</a>
-						</div>
-					</div>
-				</div>
+			{% include "catalogue/_vroom.html.twig" %}
 	
 		{% endfor %}
 

@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\VroomType;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ShowCarController extends AbstractController
@@ -32,6 +34,7 @@ class ShowCarController extends AbstractController
     /**
      * Permet d'ajouter une voiture
      * @Route("/catalogue/new", name="new_voiture")
+     * @IsGranted("ROLE_USER")
      * 
      *
      * @return Response
@@ -63,10 +66,8 @@ class ShowCarController extends AbstractController
                 $image->setVoiture($voiture);
                 $manager->persist($image);
             }
-            
-            $voiture->setAuthor($this->getUser());
-            // on ajoute l'auteur mais attention maintenant il y a un risque de bug si on n'est pas connecté (à corriger)
-            // $ad->setAuthor($this->getUser());
+
+            $voiture->setAuthor($this->getUser());         
 
             $manager->persist($voiture);
             $manager->flush();
@@ -102,9 +103,10 @@ class ShowCarController extends AbstractController
 
 
 
-        /**
+     /**
      * Permet d'afficher le formulaire d'édition
      * @Route("/catalogue/{slug}/edit", name="edit")
+     * @Security("(is_granted('ROLE_USER') and user === voiture.getAuthor()) or is_granted('ROLE_ADMIN')", message="Cette annonce ne vous appartient pas, vous ne pouvez pas la modifier")
      * @return Response
      */
     public function edit(Voiture $voiture, Request $request, EntityManagerInterface
@@ -133,5 +135,30 @@ class ShowCarController extends AbstractController
         return $this->render('catalogue/edit.html.twig', [
             'myForm' => $form->createView()
         ]);
-    }
+
+
+
+}
+   
+     /**
+     * Permet de supprimer une annonce
+     * @Route("/catalogue/{slug}/delete", name="delete")
+     * @Security("is_granted('ROLE_USER') and user === ad.getAuthor()", message="Vous n'avez pas le droit d'accèder à cette ressource")
+     * @param Voiture $voiture
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
+    public function delete(Voiture $voiture, EntityManagerInterface $manager)
+    {
+   $this->addFlash(
+       'success',
+       "L'annonce <strong>{$voiture->getSlug()}</strong> a bien été supprimée"
+   );
+   $manager->remove($voiture);
+   $manager->flush();
+   return $this->redirectToRoute("catalogue");
+   }
+    
+
+    
 }
