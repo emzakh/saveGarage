@@ -40,7 +40,7 @@ class AccountController extends AbstractController
         // besoin de rien d'autre
     }
 
-        /**
+     /**
      * Permet d'afficher le formulaire d'inscription et d'inscrire un utilisateur dans le site
      * @Route("/register", name="account_register")
      *
@@ -80,7 +80,7 @@ class AccountController extends AbstractController
 
     }
 
-        /**
+     /**
      * Permet d'afficher le formulaire d'édition d'un user et modifier ses informations
      * @Route("/account/profile", name="account_profile")
      * 
