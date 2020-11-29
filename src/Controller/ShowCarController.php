@@ -4,15 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Image;
 use App\Entity\Voiture;
+use App\Form\VroomType;
+use App\Form\VroomEditType;
 use App\Repository\VoitureRepository;
+use Symfony\Component\Form\FormError;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Form\VroomType;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Form\FormError;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
@@ -44,12 +45,13 @@ class ShowCarController extends AbstractController
     public function create(EntityManagerInterface $manager, Request $request)
     {
         $voiture = new Voiture(); 
+        
 
         $form = $this->createForm(VroomType::class, $voiture);
 
         $form->handleRequest($request);
 
-        // dump($voiture);
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -74,13 +76,41 @@ class ShowCarController extends AbstractController
             }
 
 
-            foreach ($voiture->getImages() as $image) {
+            dump($voiture->getImages());
+
+            foreach($voiture->getImages() as $image)
+            {
                 $image->setVoiture($voiture);
                 $manager->persist($image);
+                $file = $image->getUrl();
+                
+              
+                //  dump($voiture);
+
+                if(!empty($file)){
+                    $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9] remove; Lower()', $originalFilename);
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+                    try{
+                        $file->move(
+                            $this->getParameter('uploads_directory'),
+                            $newFilename
+                        );
+                    }
+                    catch(FileException $e)
+                    {
+                        return $e->getMessage();
+                    }
+                    
+                    
+                    $image->setUrl($newFilename)
+                        ->setVoiture($voiture);
+                }
+                $manager->persist($image);
             }
-
+            
             $voiture->setAuthor($this->getUser());         
-
+            
             $manager->persist($voiture);
             $manager->flush();
 
@@ -124,7 +154,7 @@ class ShowCarController extends AbstractController
     public function edit(Voiture $voiture, Request $request, EntityManagerInterface
     $manager)
     {
-        $form = $this->createForm(VroomType::class, $voiture);
+        $form = $this->createForm(VroomEditType::class, $voiture);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){

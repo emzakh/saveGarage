@@ -17,8 +17,8 @@
 				</ol>
 				<div class="carousel-inner">
 					{% for image in showVoiture.images %}
-						<div class="carousel-item {% if loop.first %}active{% endif %}">
-							<img src="{{ image.url }}" class="d-block w-100" alt="image de {{ showVoiture.slug }}" style="object-fit:cover; height:350px">
+						<div class="carousel-item {% if loop.first %}active{% endif %}">							
+							<img src="/uploads/{{ image.url }}" class="d-block w-100" alt="image de {{ showVoiture.slug }}" style="object-fit:cover; height:350px">
 							<div class="carousel-caption d-none d-md-block">
 								<h5 class="txtImg">{{ showVoiture.modele }}
 									{{ showVoiture.marque }}</h5>

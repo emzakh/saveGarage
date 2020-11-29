@@ -26,8 +26,8 @@ class Image
     private $voiture;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Url(message="Cette url n'est pas valide")
+     * @ORM\Column(nullable=true)
+     * 
      */
     private $url;
 
@@ -53,12 +53,12 @@ class Image
         return $this;
     }
 
-    public function getUrl(): ?string
+    public function getUrl()
     {
         return $this->url;
     }
 
-    public function setUrl(string $url): self
+    public function setUrl($url): self
     {
         $this->url = $url;
 

@@ -94,7 +94,7 @@ class AppFixtures extends Fixture
 
             for ($i = 1; $i <= rand(2, 4); $i++) {
                 $image = new Image();
-                $image->setUrl('https://placekitten.com/350/350')
+                $image->setUrl('michou-5fc259f8b865e.jpeg')
                     ->setCaption($faker->sentence())
                     ->setVoiture($voiture);
                 $manager->persist($image);
