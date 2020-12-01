@@ -11,6 +11,8 @@
 						<div class="card-body">
 							<h4 class="card-title">{{ car.modele }}</h4>
 							<p class="card-text text-truncate">{{ car.description }}</p>
+							<p class="card-text">{{ car.prix }} €</p>
+							<p class="card-text">{{ car.km }} km</p>
 							<a href="{{ url }}" class="btn btn-danger col-6 mb-1">Voir plus ...</a>
                                {% if (app.user and app.user == car.author) or is_granted('ROLE_ADMIN') %}
                                 <a href="{{ path('edit',{'slug': car.slug})}}" class="btn btn-secondary">Modification de l'annonce</a>

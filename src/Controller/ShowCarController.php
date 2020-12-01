@@ -37,7 +37,8 @@ class ShowCarController extends AbstractController
     /**
      * Permet d'ajouter une voiture
      * @Route("/catalogue/new", name="new_voiture")
-     * @IsGranted("ROLE_USER")     * 
+     * @IsGranted("ROLE_USER")   
+     *  
      *
      * @return Response
      */
