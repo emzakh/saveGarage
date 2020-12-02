@@ -32,11 +32,13 @@ class Voiture
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=2, max=255, minMessage="La marque doit faire plus de 2 caractères", maxMessage="Le titre ne peut pas faire plus de 255 caractères")
      */
     private $marque;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=2, max=255, minMessage="La marque doit faire plus de 2 caractères", maxMessage="Le titre ne peut pas faire plus de 255 caractères")
      */
     private $modele;
 
@@ -48,6 +50,7 @@ class Voiture
 
     /**
      * @ORM\Column(type="integer")
+     * 
      */
     private $km;
 
@@ -88,7 +91,7 @@ class Voiture
 
     /**
      * @ORM\Column(type="text")
-     * 
+     * @Assert\Length(min=100, minMessage="Votre description doit faire plus de 20 caractères")
      */
     private $description;
 
