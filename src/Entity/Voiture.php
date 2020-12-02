@@ -91,7 +91,7 @@ class Voiture
 
     /**
      * @ORM\Column(type="text")
-     * @Assert\Length(min=100, minMessage="Votre description doit faire plus de 20 caractères")
+     * @Assert\Length(min=20, minMessage="Votre description doit faire plus de 20 caractères")
      */
     private $description;
 
